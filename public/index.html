@@ -1,0 +1,280 @@
+<!doctype html><html lang="en" data-theme="spatial"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Challenge Arena</title>
+<style>
+/* Theme tokens: both themes style the SAME components. Switch with data-theme on <html>. */
+[data-theme=tech]{--bg:#0f172a;--card:#1e293b;--fg:#f8fafc;--mut:#94a3b8;--ac:#6366f1;--ac2:#22d3ee;--ok:#16a34a;--bad:#dc2626;--line:#334155;--glow:none;--font:system-ui,sans-serif;--rad:14px;--bgimg:linear-gradient(#22d3ee0a 1px,transparent 1px),linear-gradient(90deg,#22d3ee0a 1px,transparent 1px);--bgsize:32px 32px}
+[data-theme=spatial]{--bg:#05070f;--card:#0d1330cc;--fg:#f1f5ff;--mut:#9aa8d6;--ac:#8b5cf6;--ac2:#38bdf8;--ok:#059669;--bad:#dc2626;--line:#2a3470;--glow:0 0 0 1px #8b5cf655,0 0 22px #6d28d944;--font:"Segoe UI",system-ui,sans-serif;--rad:18px}
+*{box-sizing:border-box}body{margin:0;font:18px var(--font);background:var(--bg);color:var(--fg);min-height:100vh}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background-image:var(--bgimg);background-size:var(--bgsize,auto);pointer-events:none}
+[data-theme=spatial] body::before{inset:-30%;background-image:radial-gradient(1.5px 1.5px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 120px 80px,#cbd5ff,transparent),radial-gradient(1.5px 1.5px at 210px 160px,#fff,transparent),radial-gradient(ellipse at 20% 10%,#4c1d9566,transparent 55%),radial-gradient(ellipse at 85% 90%,#0e749066,transparent 50%);background-size:260px 200px,260px 200px,260px 200px,100% 100%,100% 100%;animation:drift 240s linear infinite}
+.orbit{display:none}[data-theme=spatial] .orbit{display:block;position:fixed;right:-140px;bottom:-140px;width:380px;height:380px;border:1px solid #8b5cf644;border-radius:50%;z-index:-1;pointer-events:none;animation:spin 90s linear infinite}
+.orbit::after{content:"";position:absolute;top:-6px;left:50%;width:12px;height:12px;border-radius:50%;background:var(--ac2);box-shadow:0 0 16px var(--ac2)}
+@keyframes drift{to{transform:translate3d(-60px,-40px,0)}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes rise{from{opacity:0;transform:translateY(8px)}}@keyframes pop{50%{transform:scale(1.02)}}@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+main{max-width:720px;margin:auto;padding:16px}.big main{max-width:1500px}.big{font-size:clamp(20px,2.2vw,34px)}
+input,textarea,button,select{font:inherit;padding:12px;border-radius:calc(var(--rad) - 4px);border:2px solid var(--line);background:var(--card);color:var(--fg);width:100%;margin:4px 0}
+button{background:var(--ac);border:0;cursor:pointer;font-weight:600;min-height:44px}button:disabled{opacity:.55;cursor:default}button.sec{background:var(--sec)}button.danger{background:var(--bad)}
+:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1;min-width:110px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:16px;margin:10px 0;box-shadow:var(--glow)}.card.qenter{animation:rise .25s ease-out}
+@media(min-width:900px){[data-theme=spatial] .card{backdrop-filter:blur(8px)}}
+.opts{display:grid;gap:10px}@media(min-width:700px){.big .opts{grid-template-columns:1fr 1fr}}.big .opt{padding:20px}
+.opt{text-align:left;background:var(--card);border:3px solid var(--line);transition:transform .12s,box-shadow .12s,border-color .12s}
+@media(hover:hover){.opt:not(:disabled):hover{transform:translateY(-2px);border-color:var(--ac2);box-shadow:0 0 14px #38bdf855}}
+.opt.sel{border-color:var(--ac2);box-shadow:0 0 16px #38bdf866}.opt.ok{background:var(--ok);border-color:var(--ok);animation:pop .35s}.opt.bad{background:var(--bad);border-color:var(--bad);animation:shake .35s}.opt:disabled{opacity:.85}.opt.ok:disabled,.opt.bad:disabled,.opt.sel:disabled{opacity:1}
+.tag{float:right;font-size:.8em;font-weight:700}.mut{color:var(--mut)}table{width:100%;border-collapse:collapse}td,th{padding:8px;text-align:left;border-bottom:1px solid var(--line)}
+[data-theme=spatial] h1,[data-theme=spatial] h2{letter-spacing:.08em;text-transform:uppercase}.lb tr.r1 td{font-weight:700;background:#38bdf814}[data-theme=spatial] .lb tr.r1 td{color:var(--ac2)}tr:hover td{background:#ffffff0a}
+.hero{text-align:center}.qn{letter-spacing:.2em;color:var(--ac2);font-weight:700}.hero img{max-width:100%;max-height:38vh;border-radius:var(--rad);display:block;margin:8px auto}
+.err{color:var(--errc)}.sm{width:auto;padding:4px 10px;min-height:0}.chk{display:inline-flex;gap:6px;align-items:center;margin-right:12px}.chk input{width:auto}[hidden]{display:none!important}
+[data-theme=tech]{--sec:#475569;--errc:#fca5a5}[data-theme=spatial]{--sec:#1e2a5a;--errc:#fda4af}
+.brand{margin-right:auto;font-weight:800;letter-spacing:.14em;color:var(--ac2);text-decoration:none;font-size:.9em}.brandbig{font-weight:800;letter-spacing:.3em;color:var(--ac2);font-size:1.1em}
+[data-theme=spatial] .brandbig,[data-theme=spatial] .brand{text-shadow:0 0 14px #38bdf8aa}[data-theme=tech] .brand,[data-theme=tech] .brandbig{font-family:ui-monospace,Consolas,monospace}
+main.auth{max-width:440px;margin-top:5vh}.dh{text-align:center;margin:6px 0 10px}.hint{text-align:center;font-size:.6em;margin-top:18px}.tw{overflow-x:auto}.good{color:#4ade80;font-weight:700}
+.ltr{display:inline-grid;place-items:center;width:1.7em;height:1.7em;border-radius:50%;border:2px solid var(--ac2);margin-right:.6em;font-weight:700;flex:none}
+.pill{display:inline-block;padding:2px 14px;border-radius:99px;font-weight:700;letter-spacing:.08em;border:1px solid var(--line)}.pill.active{background:var(--ok);border-color:var(--ok)}.pill.finished{background:var(--sec)}.pill.ready{color:var(--ac2);border-color:var(--ac2)}
+#nav a,#nav span{white-space:nowrap}#nav{flex-wrap:wrap}
+/* ===== v6: buttons everywhere, spatial depth, interactive backdrop ===== */
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}html.fx-off #fx{display:none}
+[data-theme=spatial] body::before{inset:-30%;background-image:radial-gradient(ellipse at 15% 10%,#4c1d9577,transparent 55%),radial-gradient(ellipse at 88% 92%,#0e749077,transparent 50%),radial-gradient(ellipse at 60% 45%,#1e1b4b66,transparent 60%);background-size:100% 100%;animation:nebula 40s ease-in-out infinite alternate}
+@keyframes nebula{to{transform:translate3d(-3%,2%,0) scale(1.08)}}
+[data-theme=spatial] .orbit.o2{right:auto;bottom:auto;left:-220px;top:-220px;width:540px;height:540px;border-color:#38bdf833;animation-duration:150s;animation-direction:reverse}
+select{cursor:pointer}
+/* buttons: every action and every navigation is a real button */
+button{position:relative;overflow:hidden;transition:transform .12s,box-shadow .2s,filter .2s}
+button::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at var(--px,50%) var(--py,50%),#ffffff66 0,transparent 55%)}
+button.rip::after{animation:ripple .6s ease-out}
+@keyframes ripple{from{opacity:1;transform:scale(.3)}to{opacity:0;transform:scale(1.8)}}
+button:not(:disabled):active{transform:scale(.97)}
+@media(hover:hover){button:not(:disabled):hover{filter:brightness(1.12)}}
+button.btn{width:auto;margin:0;min-height:40px;padding:8px 18px;border-radius:99px;background:var(--sec);border:1px solid var(--line);color:var(--fg);white-space:nowrap}
+button.btn.pri{background:var(--ac);border-color:transparent}button.btn.danger{background:var(--bad);border-color:transparent}button.btn.ghost{background:transparent}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.dock{position:fixed;right:14px;bottom:14px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;z-index:5;opacity:.35;transition:opacity .25s}.dock:hover,.dock:focus-within{opacity:1}
+/* spatial: depth, glass, light that follows the pointer */
+[data-theme=spatial] h1{background:linear-gradient(90deg,#fff,#a5b4fc 55%,var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-theme=spatial] .card{background:linear-gradient(160deg,#151d4dcc,#090e2bcc);border-color:#6d7bff38;box-shadow:0 22px 50px -22px #000d,0 0 0 1px #8b5cf622,0 0 32px #6d28d933,inset 0 1px 0 #ffffff17;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .25s ease-out,box-shadow .25s,border-color .25s}
+[data-theme=spatial] .card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),#38bdf826,transparent 55%)}
+[data-theme=spatial] .card:hover{border-color:#38bdf866;box-shadow:0 26px 60px -22px #000d,0 0 0 1px #38bdf844,0 0 42px #38bdf833,inset 0 1px 0 #ffffff22}
+[data-theme=spatial] .card:hover::before{opacity:1}
+[data-theme=spatial] input:focus,[data-theme=spatial] textarea:focus,[data-theme=spatial] select:focus{border-color:var(--ac2);box-shadow:0 0 0 3px #38bdf833,0 0 22px #38bdf855}
+[data-theme=spatial] button:not(.sec):not(.danger):not(.opt):not(.btn),[data-theme=spatial] button.btn.pri{background:linear-gradient(135deg,var(--ac),#6366f1 55%,var(--ac2));box-shadow:0 8px 24px -8px #8b5cf6cc}
+[data-theme=spatial] button.btn:not(.pri):not(.danger){background:#1e2a5a99;border-color:#6d7bff44;backdrop-filter:blur(6px)}
+@media(hover:hover){[data-theme=spatial] button:not(:disabled):not(.opt):hover{box-shadow:0 0 22px #8b5cf6aa}}
+[data-theme=spatial] .opt{background:linear-gradient(135deg,#1a2360b3,#0c1233b3)}
+[data-theme=spatial] .pill.active{box-shadow:0 0 14px #05966988}
+@media(min-width:900px){[data-theme=spatial] .card{backdrop-filter:blur(14px) saturate(1.3)}}
+/* ===== v7.1: live top-2 side scoreboard on the big screen ===== */
+#sbside{position:fixed;top:0;right:0;bottom:0;width:min(30vw,440px);min-width:300px;z-index:4;padding:78px 18px 78px;display:flex;flex-direction:column;gap:14px;justify-content:center;transform:translateX(105%);transition:transform .45s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+#sbside.on{transform:none;pointer-events:auto}
+#sbside .sbh{text-align:center;font-weight:800;letter-spacing:.18em;color:var(--ac2);font-size:.62em}
+#sbside .sbc{display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--rad);background:var(--card);border:1px solid var(--line);box-shadow:var(--glow)}
+#sbside .sbc.p1{border-color:#fbbf24aa;box-shadow:0 0 30px #fbbf2433}#sbside .sbc.p2{border-color:#cbd5e1aa;box-shadow:0 0 24px #cbd5e12e}
+#sbside .md{flex:none;width:2.6em;height:2.6em;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#1c1917;border:3px solid #ffffff55}
+#sbside .p1 .md{background:radial-gradient(circle at 30% 25%,#fef3c7,#fbbf24 55%,#b45309)}#sbside .p2 .md{background:radial-gradient(circle at 30% 25%,#fff,#cbd5e1 55%,#64748b)}
+#sbside .nm{font-weight:700;overflow-wrap:anywhere;line-height:1.2}#sbside .sub{font-size:.62em;color:var(--mut)}#sbside .bd{display:inline-block;margin-top:4px;padding:1px 10px;border-radius:99px;font-size:.58em;font-weight:800;letter-spacing:.06em}
+#sbside .p1 .bd{background:#fbbf24;color:#1c1917}#sbside .p2 .bd{background:#cbd5e1;color:#0f172a}
+#sbside .sc{margin-left:auto;text-align:right;font-weight:900;font-size:1.5em;line-height:1}#sbside .sc small{display:block;font-size:.4em;font-weight:600;color:var(--mut);letter-spacing:.1em;margin-top:4px}
+#sbside .sbc.bump{animation:pop .6s}#sbside .none{text-align:center}
+@media(min-width:900px){body.sb-open{padding-right:min(30vw,440px)}}
+@media(max-width:899px){#sbside{width:min(86vw,380px)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style></head><body><canvas id="fx" aria-hidden="true"></canvas><div class="orbit" aria-hidden="true"></div><div class="orbit o2" aria-hidden="true"></div><main id="app"></main>
+<script src="/socket.io/socket.io.js"></script><script>
+const $=s=>document.querySelector(s),app=$('#app'),h=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),A='ABCDEF';
+/* Interactive backdrop: parallax star field that reacts to the pointer, clicks, typing and live quiz events. CSS/canvas only, no libraries. */
+const FX=(()=>{
+ const cv=$('#fx'),cx=cv.getContext('2d'),RM=matchMedia('(prefers-reduced-motion: reduce)'),M={x:-9999,y:-9999,nx:.5,ny:.5,sx:.5,sy:.5},OK='#34d399',BAD='#fb7185';
+ let W=0,H=0,stars=[],parts=[],rings=[],streak=null,warp=0,last=0,run=false,on=localStorage.fx!=='off',C1='#8b5cf6',C2='#38bdf8',tech=false;
+ const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim(),rnd=(a,b)=>a+Math.random()*(b-a);
+ function theme(){C1=css('--ac')||C1;C2=css('--ac2')||C2;tech=document.documentElement.dataset.theme==='tech'}
+ function size(){const D=Math.min(devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;cv.width=W*D;cv.height=H*D;cx.setTransform(D,0,0,D,0,0);
+  const n=Math.round(Math.min(170,Math.max(45,W*H/9500)));stars=Array.from({length:n},()=>({x:rnd(0,W),y:rnd(0,H),z:rnd(.2,1),r:rnd(.4,1.6),t:rnd(0,6.28),h:Math.random()<.25,dx:0,dy:0}));frame(performance.now(),true)}
+ function frame(t,still){
+  const k=Math.min(3,((t-last)||16)/16);last=t;cx.clearRect(0,0,W,H);if(!on)return;
+  M.sx+=(M.nx-M.sx)*.07*k;M.sy+=(M.ny-M.sy)*.07*k;warp*=Math.pow(.95,k);if(warp<.01)warp=0;
+  const mx=W/2,my=H/2,ox=(M.sx-.5)*-46,oy=(M.sy-.5)*-46,near=[],hasM=M.x>-999&&!still;
+  if(hasM){const g=cx.createRadialGradient(M.x,M.y,0,M.x,M.y,260);g.addColorStop(0,C2);g.addColorStop(1,'transparent');cx.globalAlpha=.1;cx.fillStyle=g;cx.fillRect(M.x-260,M.y-260,520,520)}
+  for(const s of stars){
+   if(!still){s.y-=.05*s.z*k;if(s.y<-5)s.y=H+5;
+    if(warp){s.x+=(s.x-mx)*warp*.012*s.z*k;s.y+=(s.y-my)*warp*.012*s.z*k;if(s.x<-20||s.x>W+20||s.y<-20||s.y>H+20){s.x=mx+rnd(-80,80);s.y=my+rnd(-60,60)}}}
+   s.dx=s.x+ox*s.z;s.dy=s.y+oy*s.z;
+   cx.globalAlpha=(.45+.55*Math.sin(t*.0015*s.z+s.t))*(.35+.65*s.z);cx.fillStyle=s.h?C2:'#fff';
+   if(warp>.05){cx.strokeStyle=cx.fillStyle;cx.lineWidth=s.r;cx.beginPath();cx.moveTo(s.dx,s.dy);cx.lineTo(s.dx-(s.x-mx)*warp*.06*s.z,s.dy-(s.y-my)*warp*.06*s.z);cx.stroke()}
+   cx.beginPath();cx.arc(s.dx,s.dy,s.r*(.7+s.z*.6),0,6.283);cx.fill();
+   if(hasM){const d=Math.hypot(s.dx-M.x,s.dy-M.y);if(d<150)near.push({x:s.dx,y:s.dy,d})}}
+  cx.lineWidth=1;
+  if(tech&&!still){cx.strokeStyle=C2;for(let i=0;i<stars.length;i++)for(let j=i+1;j<stars.length;j++){const a=stars[i],b=stars[j],d=Math.hypot(a.dx-b.dx,a.dy-b.dy);if(d<110){cx.globalAlpha=(1-d/110)*.22;cx.beginPath();cx.moveTo(a.dx,a.dy);cx.lineTo(b.dx,b.dy);cx.stroke()}}}
+  if(near.length){near.sort((a,b)=>a.d-b.d);const n=near.slice(0,10);cx.strokeStyle=C2;
+   for(const s of n){cx.globalAlpha=(1-s.d/150)*.5;cx.beginPath();cx.moveTo(M.x,M.y);cx.lineTo(s.x,s.y);cx.stroke()}
+   cx.strokeStyle=C1;for(let i=0;i<n.length;i++)for(let j=i+1;j<n.length;j++){const d=Math.hypot(n[i].x-n[j].x,n[i].y-n[j].y);if(d<90){cx.globalAlpha=(1-d/90)*.4;cx.beginPath();cx.moveTo(n[i].x,n[i].y);cx.lineTo(n[j].x,n[j].y);cx.stroke()}}}
+  if(!tech&&!still){if(!streak&&Math.random()<.002*k)streak={x:rnd(0,W),y:rnd(0,H*.4),vx:rnd(6,10),vy:rnd(2,4),l:1};
+   if(streak){cx.globalAlpha=streak.l;cx.strokeStyle='#fff';cx.lineWidth=1.5;cx.beginPath();cx.moveTo(streak.x,streak.y);cx.lineTo(streak.x-streak.vx*6,streak.y-streak.vy*6);cx.stroke();streak.x+=streak.vx*k;streak.y+=streak.vy*k;streak.l-=.02*k;if(streak.l<=0)streak=null}}
+  for(let i=rings.length;i--;){const r=rings[i];r.r+=r.v*k;r.l-=.025*k;if(r.l<=0){rings.splice(i,1);continue}cx.globalAlpha=r.l*.7;cx.strokeStyle=r.c;cx.lineWidth=2;cx.beginPath();cx.arc(r.x,r.y,r.r,0,6.283);cx.stroke()}
+  for(let i=parts.length;i--;){const p=parts[i],f=Math.pow(.96,k);p.vx*=f;p.vy=p.vy*f+.04*k;p.x+=p.vx*k;p.y+=p.vy*k;p.l-=.018*k;if(p.l<=0){parts.splice(i,1);continue}cx.globalAlpha=p.l;cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x,p.y,p.r*p.l+.4,0,6.283);cx.fill()}
+  cx.globalAlpha=1}
+ const loop=t=>{if(!run)return;frame(t);requestAnimationFrame(loop)};
+ function start(){if(run||RM.matches||!on||document.hidden)return;run=true;last=performance.now();requestAnimationFrame(loop)}
+ function stop(){run=false}
+ function burst(x,y,c,n=14,ring=true){if(!on||RM.matches)return;for(let i=0;i<n;i++){const a=rnd(0,6.283),v=rnd(1.5,5.5);parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1,r:rnd(1.5,3.2),l:1,c:c||(Math.random()<.5?C1:C2)})}
+  if(parts.length>400)parts.splice(0,parts.length-400);if(ring)rings.push({x,y,r:6,v:3.2,l:1,c:c||C2})}
+ const at=(el,c,n)=>{if(!el)return;const r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,c,n)};
+ addEventListener('pointermove',e=>{M.x=e.clientX;M.y=e.clientY;M.nx=e.clientX/W;M.ny=e.clientY/H},{passive:true});
+ document.documentElement.addEventListener('mouseleave',()=>{M.x=-9999;M.nx=M.ny=.5});
+ addEventListener('pointerdown',e=>burst(e.clientX,e.clientY,null,e.target.closest&&e.target.closest('button,select,input,textarea')?10:16));
+ let kt=0;addEventListener('keydown',e=>{const n=performance.now();if(n-kt<70||e.metaKey||e.ctrlKey||e.altKey)return;kt=n;const el=document.activeElement,r=el&&el!==document.body&&el.getBoundingClientRect?el.getBoundingClientRect():null;
+  r?burst(Math.min(r.right-14,r.left+16+(el.value?el.value.length:0)*10),r.top+r.height/2,null,4,false):burst(W/2,H/2,null,3,false)});
+ addEventListener('resize',size);addEventListener('hashchange',()=>bump(1));
+ document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+ RM.addEventListener&&RM.addEventListener('change',()=>{if(RM.matches){stop();cx.clearRect(0,0,W,H)}else start()});
+ function bump(a=1){if(on&&!RM.matches)warp=Math.max(warp,a)}
+ document.documentElement.classList.toggle('fx-off',!on);theme();size();start();
+ return{burst,bump,theme,at,get on(){return on},
+  set(v){on=v;localStorage.fx=v?'on':'off';document.documentElement.classList.toggle('fx-off',!v);if(v){size();start()}else{stop();cx.clearRect(0,0,W,H)}},
+  answer(ok){at(document.querySelector(ok?'.opt.ok':'.opt.bad'),ok?OK:BAD,ok?34:20);if(ok)bump(.5)},
+  celebrate(){bump(1.2);for(let i=0;i<8;i++)setTimeout(()=>burst(rnd(W*.15,W*.85),rnd(H*.15,H*.5),i%2?C1:C2,22),i*220)}}
+})();
+const THEMES={tech:'Tech Quiz',spatial:'Spatial'};let shownQ=null;
+function setTheme(t){if(!THEMES[t])t='spatial';document.documentElement.dataset.theme=t;localStorage.theme=t;FX.theme();const e=document.querySelector('#th');if(e)e.value=t} // visual preference only; never sent to the server
+const themeSel=()=>`<select id=th aria-label=Theme style="width:auto;margin:0">${Object.entries(THEMES).map(([k,v])=>`<option value=${k}>${v}</option>`).join('')}</select>`;
+setTheme(new URLSearchParams(location.search).get('theme')||localStorage.theme);
+addEventListener('keydown',e=>{if(location.hash.startsWith('#/display')&&!/INPUT|SELECT/.test(document.activeElement.tagName)){if(e.key==='t')toggleTheme();if(e.key==='f')toggleFs();if(e.key==='s')toggleSb()}});
+let sock,st={},tok=localStorage.tok,view='player',role,me=null;
+const api=async(p,m='GET',b)=>{FX.bump(.22);const r=await fetch('/api'+p,{method:m,headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok},body:b&&JSON.stringify(b)});
+ if(r.status===401&&tok){localStorage.removeItem('tok');tok=null;route()}const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||r.status);return j};
+function send(){const p=st.pend;if(!p||!sock||!sock.connected)return;
+ const cb=r=>{if(!st.pend||st.pend.sid!==p.sid)return;st.pend=null;if(r.ok){st.answered=true;st.mine={pos:r.pos,correct:r.correct}}else if(r.error!=='Already answered')st.err=r.error;render()};
+ p.fin?sock.emit('team:finalize',{sid:p.sid},cb):sock.emit('participant:submit_answer',{pos:p.pos,sid:p.sid},cb)}
+setInterval(()=>{if(st.pend)send()},3000); // retry with the SAME submission id until the server acknowledges
+function pick(pos){if(st.locked||st.answered||!st.open)return;
+ if(st.team){st.locked=true;st.tsel=true;st.sel=pos;st.err=null;render();sock.emit('team:select_answer',{pos});return}
+ st.locked=true;st.sel=pos;st.pend={sid:crypto.randomUUID(),pos,qi:st.question.index};render();send()} // lock + paint first, network second
+function finalize(){if(st.pend||st.answered||!st.sel)return;st.locked=true;st.pend={sid:crypto.randomUUID(),fin:true,qi:st.question.index};render();send()}
+function connect(ev,extra){sock&&sock.disconnect();sock=io({auth:{token:tok}});role=ev;const E=m=>{if(st.tsel){st.tsel=false;if(m!=='Selection already locked'&&m!=='Answer already finalized'){st.locked=false;st.sel=null}}st.err=m;render()};
+ sock.on('connect',()=>sock.emit(role,extra));
+ sock.on('disconnect',()=>render());
+ sock.on('state',s=>{const k={l:st.locked,p:st.pend,s:st.sel};st=s;if(s.mySel){st.sel=s.mySel;st.locked=true}if(role==='create_team'||role==='join_team'){role='join_player';localStorage.mode='join_player'}
+  if(!s.mine&&k.p&&s.question&&k.p.qi===s.question.index){st.pend=k.p;st.locked=k.l;st.sel=k.s}render();send()});
+ sock.on('team:my_selection',r=>{st.sel=r.pos;st.locked=true;st.tsel=false;render()});
+ sock.on('team_created',r=>{localStorage.tcode=r.teamCode});
+ sock.on('quiz:question_started',q=>{const p=q.received!==undefined;Object.assign(st,{status:'live',qstatus:'active',open:true,question:q,mine:null,answered:false,locked:false,pend:null,sel:null,me:null,all:false,err:null,received:p?q.received:0,eligible:p?q.eligible:st.eligible});
+  if(st.team){st.team.finalized=false;st.team.locked=0;st.mySel=null}render();FX.bump(1)});
+ sock.on('quiz:question_finished',r=>{Object.assign(st,{qstatus:'finished',open:false,me:r.me});if(r.board){st.board=r.board;st.received=r.received;st.eligible=r.eligible}if(r.mine){st.mine=r.mine;st.answered=true}render();r.mine&&r.mine.correct!==undefined?FX.answer(r.mine.correct):FX.bump(.5)});
+ sock.on('quiz:finished',b=>{st.status='finished';st.qstatus='finished';st.board=b;st.open=false;render();FX.celebrate()});
+ sock.on('quiz:restarted',()=>{st={...st,question:null,qstatus:'ready',status:'draft',open:false,mine:null,answered:false,pend:null,locked:false,sel:null,me:null,received:0,all:false,board:(st.board||[]).map(r=>({...r,score:0,correct:0,answered:0,avg:null}))};render()});
+ sock.on('quiz:deleted',()=>{alert('This quiz was deleted');location.hash='#/';location.reload()});
+ sock.on('quiz:response_received',a=>{st.received=a.received;st.eligible=a.eligible;render()});sock.on('quiz:all_responses_received',()=>{st.all=true;render()});
+ sock.on('participant:answer_locked',r=>{st.answered=true;st.locked=true;st.sel=r.pos;render()});sock.on('participant:answer_result',r=>{st.mine=r;st.pend=null;render();if(r.correct!==undefined)FX.answer(r.correct)});
+ sock.on('SCOREBOARD_UPDATED',b=>{st.board=b;if(view!=='player')render()});
+ ['team:member_joined','team:answer_updated','team:answer_finalized'].forEach(e=>sock.on(e,t=>{st.team=t;if(e==='team:answer_finalized')st.answered=true;render()}));
+ ['submit_error','error_msg','admin:error'].forEach(e=>sock.on(e,E));sock.on('display:error',m=>{$('#de')&&($('#de').textContent=m)})}
+const lb=n=>`<div class=tw><table class=lb><tr><th>#</th><th>Name</th><th>Correct</th><th>Score</th><th>Acc</th><th>Avg s</th></tr>${(st.board||[]).slice(0,n||999).map(r=>`<tr class="r${r.rank}"><td>${['🥇','🥈','🥉'][r.rank-1]||''} ${r.rank}</td><td>${h(r.name)}${r.members?`<br><small class=mut>${h(r.members)}</small>`:''}${r.team?` <span class=mut>(${h(r.team)})</span>`:''}</td><td>${r.correct}</td><td>${r.score}</td><td>${r.answered?Math.round(100*r.correct/r.answered)+'%':'–'}</td><td>${r.avg??'–'}</td></tr>`).join('')}</table></div>`;
+const optsHtml=click=>`<div class=opts role=group aria-label="Answer options">${st.question.options.map((o,i)=>{let c='opt',t='';const m=st.mine;if(m&&o.id===m.pos){if(m.correct===undefined){c+=' sel';t='🔒 Locked'}else{c+=m.correct?' ok':' bad';t=m.correct?'✓ Correct':'✕ Incorrect'}}else if(!m&&st.sel===o.id){c+=' sel';t=st.pend?'● Submitting…':'● My selection'}
+ return `<button class="${c}" ${click&&st.open&&!st.answered&&!st.locked?'':'disabled'} data-o="${o.id}" aria-label="${A[i]}: ${h(o.text)}"><span class=ltr aria-hidden=true>${A[i]}</span>${h(o.text)}<span class=tag>${t}</span></button>`}).join('')}</div>`;
+const cfgOpts=()=>`<div class=card><b>Participation — allowed sizes</b><br>${[[1,'Individual'],[2,'2 members'],[3,'3 members'],[4,'4 members']].map(([n,l])=>`<label class=chk><input type=checkbox id=sz${n} ${n===1?'checked':''}>${l}</label>`).join('')}
+ <select id=dm aria-label="Question display"><option value=big_only>Question on Big Screen only</option><option value=full>Question + options on participants</option></select></div>`;
+const cfgBody=()=>({allowed_team_sizes:[1,2,3,4].filter(n=>$('#sz'+n).checked),display_mode:$('#dm').value});
+const BRAND='<a class=brand href="#/">◉ CHALLENGE ARENA</a>';
+const go=(l,hash,c='')=>`<button type=button class="btn ${c}" data-go="${hash}">${l}</button>`;
+const fxBtn=()=>`<button type=button class="btn ghost" data-fx aria-pressed="${FX.on}">Effects: ${FX.on?'on':'off'}</button>`;
+const fxLabels=()=>document.querySelectorAll('[data-fx]').forEach(b=>{b.textContent='Effects: '+(FX.on?'on':'off');b.setAttribute('aria-pressed',FX.on)});
+const toggleTheme=()=>setTheme(document.documentElement.dataset.theme==='tech'?'spatial':'tech'),toggleFs=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();
+async function copyText(t,b){try{await navigator.clipboard.writeText(t)}catch{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch{}a.remove()}
+ b.dataset.l=b.dataset.l||b.textContent;b.textContent='Copied ✓';setTimeout(()=>b.textContent=b.dataset.l,1300)}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-go],[data-copy],[data-open],[data-fs],[data-fx],[data-th],[data-sb]');if(!b)return;const d=b.dataset;
+ if(d.go!==undefined)location.hash===d.go?route():(location.hash=d.go);else if(d.copy!==undefined)copyText(d.copy,b);else if(d.open!==undefined)window.open(d.open,'_blank','noopener');
+ else if(d.fs!==undefined)toggleFs();else if(d.fx!==undefined){FX.set(!FX.on);fxLabels()}else if(d.th!==undefined)toggleTheme();else if(d.sb!==undefined)toggleSb()});
+document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('button');if(!b||b.disabled)return;const r=b.getBoundingClientRect();b.style.setProperty('--px',(e.clientX-r.left)+'px');b.style.setProperty('--py',(e.clientY-r.top)+'px');b.classList.remove('rip');void b.offsetWidth;b.classList.add('rip')});
+/* spatial cards: gentle 3D tilt + light that follows the pointer (skipped for touch, reduced motion, and while typing in a card) */
+let tcard=null;addEventListener('pointermove',e=>{if(e.pointerType==='touch'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const c=e.target.closest&&e.target.closest('.card');
+ if(tcard&&tcard!==c){tcard.style.removeProperty('--rx');tcard.style.removeProperty('--ry')}tcard=c;if(!c||c.matches(':focus-within'))return;
+ const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height,m=Math.min(3.5,1100/Math.max(r.width,r.height));
+ c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%');c.style.setProperty('--rx',((.5-y)*m).toFixed(2)+'deg');c.style.setProperty('--ry',((x-.5)*m).toFixed(2)+'deg')},{passive:true});
+let sbOn=localStorage.sb==='on';const sbPrev=new Map();
+function toggleSb(){sbOn=!sbOn;localStorage.sb=sbOn?'on':'off';sidePanel();FX.burst(innerWidth-40,innerHeight/2,null,10)}
+function sidePanel(){let el=$('#sbside');const live=view==='display'&&st.title&&st.status!=='finished',show=sbOn&&live;
+ document.querySelectorAll('[data-sb]').forEach(b=>b.setAttribute('aria-pressed',sbOn));
+ if(!el){if(!live)return;el=document.createElement('aside');el.id='sbside';el.setAttribute('aria-label','Live scoreboard');el.setAttribute('aria-live','polite');document.body.appendChild(el)}
+ const top=(st.board||[]).slice(0,2).filter(r=>r.score>0),B=['LEADER','RUNNER-UP'],card=(r,i)=>{const was=sbPrev.get(r.id),ch=was!==undefined&&was!==r.score;sbPrev.set(r.id,r.score);
+  return `<div class="sbc p${i+1}${ch?' bump':''}"><div class=md aria-hidden=true>${i+1}</div><div><div class=nm>${h(r.name)}</div>${r.members?`<div class=sub>${h(r.members)}</div>`:''}<span class=bd>${i?'🥈':'🥇'} ${B[i]}</span></div><div class=sc>${r.score}<small>${r.correct} correct</small></div></div>`};
+ el.innerHTML=`<div class=sbh>LIVE SCOREBOARD</div>${top.length?top.map(card).join(''):'<div class="sbc none mut"><div style="width:100%">No points yet.<br><span class=sub>The top 2 appear here as answers come in.</span></div></div>'}`;
+ el.classList.toggle('on',show);document.body.classList.toggle('sb-open',show)}
+function dock(on){let d=$('#dock');if(!on){d&&d.remove();const sp=$('#sbside');sp&&sp.remove();document.body.classList.remove('sb-open');return}if(d)return;d=document.createElement('div');d.id='dock';d.className='dock';
+ d.innerHTML=`<button type=button class="btn pri" data-sb aria-pressed="${sbOn}">Scoreboard</button><button type=button class="btn" data-th>Theme</button>${fxBtn()}<button type=button class="btn" data-fs>Fullscreen</button><button type=button class="btn" data-go="#/">Exit</button>`;document.body.appendChild(d)}
+function leave(){if(st.status!=='finished'&&!confirm('Leave this quiz? You can rejoin with the same code.'))return;localStorage.removeItem('mode');sock&&sock.disconnect();location.hash='#/'}
+
+function nav(){let n=$('#nav');if(!n){n=document.createElement('div');n.id='nav';n.style.cssText='padding:8px 16px;display:flex;gap:10px;align-items:center';document.body.insertBefore(n,app)}
+ n.innerHTML=location.hash.startsWith('#/display')?'':BRAND+themeSel()+fxBtn()+(me?`<span class=mut>${h(me.username)} (${me.role})</span>`+(me.role==='ADMIN'?go('Dashboard','#/admin')+go('Display','#/display'):go('Home','#/'))+'<button type=button class="btn" id=lo>Logout</button>':go('Login','#/login')+go('Register','#/register','pri'));
+ $('#th')&&($('#th').value=document.documentElement.dataset.theme,$('#th').onchange=()=>setTheme($('#th').value));
+ $('#lo')&&($('#lo').onclick=async e=>{e.preventDefault();try{await api('/auth/logout','POST')}catch{}['tok','mode','team','tcode'].forEach(k=>localStorage.removeItem(k));tok=null;me=null;sock&&sock.disconnect();location.hash='#/login';route()})}
+function loginPage(){app.className='auth';app.innerHTML=`<h1>Login</h1><div class=card><input id=lg placeholder="Username" autocomplete=username><input id=pw type=password placeholder=Password autocomplete=current-password><button id=li>Log in</button><p class=err id=e></p><div class=bar>${go('Create an account','#/register')}</div></div>`;
+ $('#li').onclick=async()=>{try{const r=await api('/auth/login','POST',{login:$('#lg').value,password:$('#pw').value});tok=localStorage.tok=r.token;me=r.user;location.hash=me.role==='ADMIN'?'#/admin':'#/';route()}catch(e){$('#e').textContent=e.message}}}
+function registerPage(){app.className='auth';app.innerHTML=`<h1>Register</h1><div class=card><input id=un placeholder=Username><input id=p1 type=password placeholder="Password (8+, letter + number)"><input id=p2 type=password placeholder="Confirm password"><button id=rg>Create account</button><p class=err id=e></p><div class=bar>${go('Back to login','#/login')}</div></div>`;
+ $('#rg').onclick=async()=>{try{await api('/auth/register','POST',{username:$('#un').value,password:$('#p1').value,confirm_password:$('#p2').value});location.hash='#/login';route()}catch(e){$('#e').textContent=e.message}}}
+async function route(){document.body.className='';app.className='';const hs=location.hash.split('/'),p=hs[1]||'';
+ if(tok&&!me){try{me=(await api('/me')).user}catch{me=null}}nav();dock(p==='display');
+ if(p==='display'){document.body.className='big';view='display';st={};return displayForm(hs[2])}
+ if(p==='register')return registerPage();if(!me||p==='login')return loginPage();
+ if(p==='admin'){if(me.role!=='ADMIN'){app.innerHTML='<h1>Forbidden</h1><p>An administrator account is required.</p>';return}view='admin';return admin(hs[2])}
+ if(me.role==='ADMIN'&&!p){location.hash='#/admin';return}if(me.role==='ADMIN'){app.innerHTML='<h1>Admins cannot play</h1><p>Use a participant account.</p>';return}
+ view='player';const code=hs[2]||'';
+ if(p==='play'&&localStorage.mode){connect(localStorage.mode,{code:hs[2],team:localStorage.team,teamCode:localStorage.tcode});return render()}
+ app.className='auth';app.innerHTML=`<h1>Join a quiz</h1><div class=card><label>Quiz code<input id=c value="${h(code)}" autocapitalize=characters></label><label>I want to<select id=m><option value=join_player>Play Individually</option><option value=create_team>Create Team</option><option value=join_team>Join Team</option></select></label><div id=f1 hidden><label>Team name<input id=t></label></div><div id=f2 hidden><label>Team code<input id=tc autocapitalize=characters></label></div><button id=go>Join</button><p class=err id=e></p></div>`;
+ $('#m').onchange=()=>{$('#f1').hidden=$('#m').value!=='create_team';$('#f2').hidden=$('#m').value!=='join_team'};
+ $('#go').onclick=async()=>{const c=$('#c').value.trim().toUpperCase();if(!c)return $('#e').textContent='Enter the quiz code';if(!(await fetch('/api/join/'+c)).ok)return $('#e').textContent='Quiz not found';
+  Object.assign(localStorage,{mode:$('#m').value,team:$('#t').value,tcode:$('#tc').value});location.hash='#/play/'+c;route()}}
+function render(){if(view==='admin')return adminLive();if(view==='display')return displayView();playerView()}
+function playerView(){const q=st.question;let x=`<h1>${h(st.title||'')}</h1>`;if(st.err)x+=`<p class=err role=alert>${h(st.err)}</p>`;
+ if(st.status==='finished')x+=`<div class=card><h2>🏆 Final results</h2>${lb()}</div>`;
+ else if(!q)x+=`<div class=card><h2>Waiting for the first question…</h2><p class=mut>The conductor controls the pace.</p></div>`;
+ else{const wait=st.qstatus==='finished'?`<p><b>Question finished.</b> ${st.answered?'✓ Answer recorded.':'No answer recorded.'}</p>${st.me?`<p>Score <b>${st.me.total}</b> · Rank <b>#${st.me.rank}</b></p>`:''}<p class=mut>Waiting for the next question…</p>`
+   :st.mine?'<p>🔒 Answer locked. Waiting for the conductor…</p>':st.pend?`<p>${sock&&sock.connected?'Submitting…':'Connection lost — retrying…'}</p>`:st.answered?'<p>🔒 Answer locked.</p>':'<p>Select your answer:</p>';
+  x+=`<div class="card ${q.index!==shownQ?'qenter':''}"><div class=mut>${h(q.category||'')} · ${q.marks} pts</div><h2 class=qn>◉ QUESTION ${String(q.index+1).padStart(2,'0')} / ${q.total}</h2>${q.image_url?`<img src="${h(q.image_url)}" alt="" style="max-width:100%">`:''}${q.text!=null?`<h3>${h(q.text)}</h3>`:'<p class=mut>Read the question on the big screen</p>'}${optsHtml(true)}${wait}</div>`}
+ if(st.team)x+=teamHtml();x+=`<div class=bar style="justify-content:center"><button type=button class="btn ghost" id=lv>${st.status==='finished'?'Back to home':'Leave quiz'}</button></div>`;app.innerHTML=x;shownQ=q?q.index:null;$('#lv').onclick=leave;app.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>pick(+b.dataset.o));$('#fz')&&($('#fz').onclick=finalize)}
+function teamHtml(){const t=st.team,lead=t.members.find(m=>m.leader)?.name===me.username,li=t.members.map(m=>`<li>● ${h(m.name)}${m.leader?' (leader)':''}</li>`);for(let i=t.members.length;i<t.max;i++)li.push('<li class=mut>○ Waiting for member</li>');
+ const act=st.question&&st.open?(t.finalized?'<p>🔒 Team answer locked</p>':st.sel?`<p>🔒 Your answer is locked. Teammates who have locked: <b>${t.locked||0} / ${t.total}</b></p>${lead?`<button id=fz ${t.eligible&&!st.pend?'':'disabled'}>FINALIZE TEAM ANSWER</button>`:'<p class=mut>The team leader finalizes the team answer.</p>'}`:'<p class=mut>Pick your answer. It locks immediately and teammates cannot see it.</p>'):'';
+ return `<div class=card><h3>${h(t.name)}</h3><p>Team code: <b>${h(t.code)}</b> · Members ${t.members.length}/${t.max}${t.eligible?'':` · valid team sizes: ${t.sizes.join(', ')}`}</p><ul>${li.join('')}</ul>${act}</div>`}
+function displayForm(c){app.innerHTML=`<div style="text-align:center;margin-top:10vh"><div class=brandbig>◉ CHALLENGE ARENA ◉</div><h2>Enter Display Code</h2><p>${themeSel()}</p><input id=dc value="${h(c||'')}" autocapitalize=characters style="max-width:420px;text-align:center;font-size:1.3em"><br><button id=dg style="max-width:420px">Open display</button><p class=err id=de></p><div class=bar style="justify-content:center">${go('Back','#/')}</div></div>`;
+ $('#th').value=document.documentElement.dataset.theme;$('#th').onchange=()=>setTheme($('#th').value);$('#dg').onclick=()=>connect('display:connect',{displayCode:$('#dc').value.trim()})}
+function displayView(){if(!st.title)return;const q=st.question;let x=`<div class=dh><div class=brandbig>◉ CHALLENGE ARENA ◉</div><div class=mut>${h(st.title)}</div></div>`;
+ if(st.status==='finished')x+=`<h2 style="text-align:center">QUIZ FINISHED — FINAL LEADERBOARD</h2>${lb(10)}`;
+ else if(q&&st.qstatus==='active')x+=`<div class="card hero ${q.index!==shownQ?'qenter':''}"><h2 class=qn>◉ QUESTION ${String(q.index+1).padStart(2,'0')} / ${q.total} ◉</h2>${q.image_url?`<img src="${h(q.image_url)}" alt="" style="max-width:100%;max-height:40vh;display:block;margin:auto">`:''}<h2>${h(q.text)}</h2>${optsHtml(false)}</div>`;
+ else if(q)x+=`<div class=card style="text-align:center"><h2>QUESTION ${q.index+1} FINISHED</h2><p class=mut>Waiting for next question…</p></div>`;
+ else x+=`<div class=card style="text-align:center"><h2>Waiting for the first question</h2><p class=mut>The conductor will start the quiz shortly.</p></div>`;app.innerHTML=x;shownQ=q&&st.qstatus==='active'?q.index:null;sidePanel()}
+const lockedMsg='Are you sure you want to restart this quiz?\n\nThis will reset: question progress, responses, scores, leaderboard, current question and answer state.\nTeams and participant registrations are kept.';
+async function doRestart(id){if(!confirm(lockedMsg))return;try{await api(`/quizzes/${id}/restart`,'POST');location.hash='#/admin/'+id;route()}catch(e){alert(e.message)}}
+async function doDelete(id,code){const c=prompt(`DELETE QUIZ\n\nThis permanently deletes the quiz, its questions, images, teams and results.\nType the quiz code (${code}) to confirm:`);if(c===null)return;try{await api('/quizzes/'+id,'DELETE',{confirm:c});location.hash='#/admin';route()}catch(e){alert(e.message)}}
+async function admin(id){try{
+ if(!id){const l=await api('/quizzes');app.innerHTML=`<h1>Dashboard</h1><div class=card><h3>Create quiz</h3><input id=nt placeholder="New quiz title">${cfgOpts()}<button id=nb>Create quiz</button><p class=err id=e></p></div><h2>Existing quizzes</h2>${l.map(q=>`<div class=card><b>${h(q.title)}</b> <span class=mut>${q.join_code} · ${q.status}</span><div class=row><button class=sec data-o="${q.id}">Open</button><button class=sec data-open="${h(location.origin)}/#/display/${h(q.display_code)}">Big screen</button><button class=sec data-copy="${h(q.join_code)}">Copy code</button><button class=sec data-r="${q.id}">Restart</button><button class=danger data-x="${q.id}" data-c="${q.join_code}">Delete</button></div></div>`).join('')}`;
+  app.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>location.hash='#/admin/'+b.dataset.o);app.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>doRestart(b.dataset.r));app.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>doDelete(b.dataset.x,b.dataset.c));
+  return $('#nb').onclick=async()=>{try{await api('/quizzes','POST',{title:$('#nt').value,...cfgBody()});admin()}catch(e){$('#e').textContent=e.message}}}
+ window.quiz=await api('/quizzes/'+id);st={};connect('join_admin',{code:quiz.join_code});adminRender()}catch(e){app.innerHTML=`<h1>${h(e.message)}</h1><div class=bar>${go('← Dashboard','#/admin')}</div>`}}
+function ctl(){const q=st.question,n=st.total||quiz.questions.length,s=st.qstatus||'ready',fin=st.status==='finished',idx=q?q.index:-1,hasNext=idx+1<n;if(fin)return '<h3>QUIZ FINISHED</h3>';
+ const num=s==='ready'?1:idx+1,main=s==='ready'?'<button id=sq>START QUESTION</button>':s==='active'?'<button id=fq>FINISH QUESTION</button>':hasNext?'<button id=sq>START NEXT QUESTION</button>':'<p class=mut>That was the last question.</p>';
+ return `<h3>Question ${num} / ${n}</h3><p>Status: <span class="pill ${s}">${s.toUpperCase()}</span></p>${s!=='ready'?`<p>Responses: <b>${st.received||0} / ${st.eligible||0}</b>${st.all&&s==='active'?' · <b class=good>✓ All responses received</b>':''}</p>`:`<p class=mut>Eligible: ${st.eligible||0}</p>`}${st.err?`<p class=err>${h(st.err)}</p>`:''}
+  <div class=row>${main}<button class="danger sm" id=fz2 style="margin-left:auto">FINISH QUIZ</button></div>`}
+function adminRender(){const qz=quiz,qr=`${location.origin}/#/play/${qz.join_code}`;
+ app.innerHTML=`<div class=bar>${go('← All quizzes','#/admin')}</div><h1>${h(qz.title)}</h1><div class=card>Join code <b style="font-size:1.6em">${qz.join_code}</b> · Display code <b style="font-size:1.6em">${qz.display_code}</b><br><span class=mut>Players: ${h(qr)} · Big screen: ${h(location.origin)}/#/display</span><br><img id=qr alt="QR code to join" width=160 height=160><div class=bar><button type=button class="btn pri" data-open="${h(location.origin)}/#/display/${h(qz.display_code)}">Open big screen</button><button type=button class="btn" data-copy="${h(qz.join_code)}">Copy join code</button><button type=button class="btn" data-copy="${h(qz.display_code)}">Copy display code</button><button type=button class="btn" data-copy="${h(qr)}">Copy player link</button></div></div>
+ <div class=card id=live></div><div class=card><h3>Danger zone</h3><div class=row><button class=sec id=rst>RESTART QUIZ</button><button class=danger id=del>DELETE QUIZ</button></div></div><div class=card><h3>Configuration</h3>${cfgOpts()}<button class=sec id=ss>Save settings</button><p class=mut id=sm></p></div>
+ <div class=card><h3>Questions (${qz.questions.length})</h3>${qz.questions.map((x,i)=>`<div><b>${i+1}.</b> <span class=mut>[${h(x.category)}]</span> ${h(x.question_text)} <span class=mut>(${x.marks}pts)</span> <button class="sec sm" data-u="${i}" aria-label="Move up">↑</button> <button class="sec sm" data-dn="${i}" aria-label="Move down">↓</button> <button class="sec sm" data-e="${i}">Edit</button> <button class="sec sm" data-i="${x.id}">${x.image_url?'Change image':'Add image'}</button> <button class="sec sm" data-d="${x.id}">Delete</button>${x.image_url?`<br><img src="${h(x.image_url)}" alt="" style="max-height:70px">`:''}<br>${x.options.map(o=>(o.is_correct?'✔ ':'• ')+h(o.option_text)).join(' &nbsp; ')}</div>`).join('<hr>')}</div>
+ <div class=card><h3>Add question</h3><input id=cat placeholder="Category" list=cats value=General><datalist id=cats>${[...new Set(qz.questions.map(x=>x.category))].map(c=>`<option>${h(c)}`).join('')}</datalist><input id=qt placeholder="Question"><input id=o1 placeholder="Option 1 (correct)"><input id=o2 placeholder="Option 2"><input id=o3 placeholder="Option 3 (optional)"><input id=o4 placeholder="Option 4 (optional)"><input id=mk type=number placeholder=Marks value=10><button id=aq>Add</button><p class=err id=e></p></div>
+ <div class=card><h3>Bulk add questions</h3><p class=mut>Category | Question | Correct | Wrong 1 | Wrong 2 | Wrong 3</p><textarea id=bulk rows=6></textarea><button id=bi>Import</button><p id=bm></p></div>
+ <div class=card><h3>Live scoreboard</h3><div id=sb style="max-height:50vh;overflow:auto"></div></div><div class=card><h3>Reports</h3><button class=sec id=lr>Responses</button><button class=sec id=lc>Category scores</button><div id=rs style="overflow-x:auto"></div></div>`;
+ const sizes=String(qz.allowed_team_sizes||'1').split(',').map(Number);[1,2,3,4].forEach(n=>$('#sz'+n).checked=sizes.includes(n));$('#dm').value=qz.display_mode||'full';
+ api(`/quizzes/${qz.id}/qr?base=${encodeURIComponent(location.origin)}`).then(r=>{$('#qr').src=r.dataUrl}).catch(()=>{});
+ const reload=async()=>{window.quiz=await api('/quizzes/'+qz.id);adminRender()},move=async(i,d)=>{const ids=qz.questions.map(x=>x.id),j=i+d;if(j<0||j>=ids.length)return;[ids[i],ids[j]]=[ids[j],ids[i]];await api(`/quizzes/${qz.id}/reorder`,'POST',{ids});reload()};
+ $('#rst').onclick=()=>doRestart(qz.id);$('#del').onclick=()=>doDelete(qz.id,qz.join_code);
+ $('#ss').onclick=async()=>{try{await api(`/quizzes/${qz.id}/settings`,'PUT',cfgBody());$('#sm').textContent='Saved'}catch(e){$('#sm').textContent=e.message}};
+ app.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>move(+b.dataset.u,-1));app.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>move(+b.dataset.dn,1));
+ app.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{const fi=document.createElement('input');fi.type='file';fi.accept='image/png,image/jpeg,image/webp';fi.onchange=async()=>{const file=fi.files[0];if(!file)return;try{const r=await fetch('/api/questions/'+b.dataset.i+'/image',{method:'POST',headers:{'Content-Type':file.type,Authorization:'Bearer '+tok},body:file});if(!r.ok)throw new Error((await r.json()).error);reload()}catch(e){alert(e.message)}};fi.click()});
+ app.querySelectorAll('[data-d]').forEach(b=>b.onclick=async()=>{await api('/questions/'+b.dataset.d,'DELETE');reload()});
+ app.querySelectorAll('[data-e]').forEach(b=>b.onclick=async()=>{const x=qz.questions[+b.dataset.e],cat=prompt('Category',x.category);if(cat===null)return;const t=prompt('Question text',x.question_text);if(t===null)return;
+  const o=prompt('Options separated by | (correct FIRST)',[...x.options].sort((a,b)=>b.is_correct-a.is_correct).map(o=>o.option_text).join(' | '));if(o===null)return;
+  try{await api('/questions/'+x.id,'PUT',{category:cat,question_text:t,options:o.split('|').map(s=>s.trim()).filter(Boolean),correct:0,marks:+prompt('Marks',x.marks)});reload()}catch(e){alert(e.message)}});
+ $('#aq').onclick=async()=>{try{await api(`/quizzes/${qz.id}/questions`,'POST',{category:$('#cat').value,question_text:$('#qt').value,options:[1,2,3,4].map(i=>$('#o'+i).value.trim()).filter(Boolean),correct:0,marks:+$('#mk').value});reload()}catch(e){$('#e').textContent=e.message}};
+ $('#bi').onclick=async()=>{try{const r=await api(`/quizzes/${qz.id}/import`,'POST',{text:$('#bulk').value,marks:+$('#mk').value||10});$('#bm').textContent=`Added ${r.added}, skipped ${r.skipped}`;setTimeout(reload,1000)}catch(e){$('#bm').textContent=e.message}};
+ $('#lc').onclick=async()=>{const r=await api(`/quizzes/${qz.id}/categories`),cats=[...new Set(r.map(x=>x.category))],ps={};r.forEach(x=>(ps[x.name]=ps[x.name]||{})[x.category]=x.score);
+  $('#rs').innerHTML=`<table><tr><th>Name</th>${cats.map(c=>`<th>${h(c)}</th>`).join('')}</tr>${Object.entries(ps).map(([n,v])=>`<tr><td>${h(n)}</td>${cats.map(c=>`<td>${v[c]||0}</td>`).join('')}</tr>`).join('')}</table>`};
+ $('#lr').onclick=async()=>{const r=await api(`/quizzes/${qz.id}/responses`);$('#rs').innerHTML=`<table><tr><th>Q</th><th>Name</th><th>Answer</th><th>OK</th><th>Pts</th></tr>${r.map(x=>`<tr><td>${x.q}</td><td>${h(x.name)}</td><td>${h(x.answer)}</td><td>${x.is_correct?'✅':'❌'}</td><td>${x.score}</td></tr>`).join('')}</table>`};
+ adminLive()}
+function adminLive(){const l=$('#live');if(!l)return;l.innerHTML=ctl();$('#sb').innerHTML=lb();const lock=st.status&&st.status!=='draft';document.querySelectorAll('#sz1,#sz2,#sz3,#sz4,#dm,#ss').forEach(e=>e.disabled=lock);
+ const on=(id,ev)=>$(id)&&($(id).onclick=()=>{st.err=null;sock.emit(ev)});on('#sq','admin:start_question');on('#fq','admin:finish_question');
+ $('#fz2')&&($('#fz2').onclick=()=>{if(confirm('Finish Quiz?\n\nThis will permanently end the test for all participants.'))sock.emit('admin:finish_quiz')})}
+addEventListener('hashchange',route);route();
+</script></body></html>

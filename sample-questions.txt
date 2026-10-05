@@ -1,0 +1,12 @@
+Science | Which gas do plants absorb? | Carbon dioxide | Oxygen | Nitrogen | Helium
+Science | Chemical symbol for gold? | Au | Ag | Gd | Go
+Science | Closest planet to the Sun? | Mercury | Venus | Mars | Earth
+Science | Hardest natural substance? | Diamond | Iron | Quartz | Granite
+History | In which year did WWII end? | 1945 | 1939 | 1918 | 1950
+History | Who built the Taj Mahal? | Shah Jahan | Akbar | Babur | Aurangzeb
+History | First person on the Moon? | Neil Armstrong | Buzz Aldrin | Yuri Gagarin | John Glenn
+History | Which civilization built Machu Picchu? | Inca | Maya | Aztec | Olmec
+Technology | What does HTTP stand for? | HyperText Transfer Protocol | High Transfer Text Protocol | Hyper Terminal Tool Protocol | Home Tool Transfer Protocol
+Technology | Which is a relational database? | PostgreSQL | Redis | Kafka | Nginx
+Technology | What does CPU stand for? | Central Processing Unit | Computer Personal Unit | Core Program Utility | Central Program Unit
+Technology | Which port does HTTPS use by default? | 443 | 80 | 21 | 8080

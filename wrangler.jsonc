@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "challenge-arena",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-04",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "containers": [{
+    "class_name": "ChallengeArena",
+    "scheduling_policy": "durable_object",
+    "images": { "base": { "dockerfile": "./Dockerfile" } }
+  }],
+  "durable_objects": { "bindings": [{ "name": "CHALLENGE_ARENA", "class_name": "ChallengeArena" }] },
+  "exports": { "ChallengeArena": { "type": "durable-object", "storage": "sqlite" } },
+  "secrets": { "required": ["JWT_SECRET", "ADMIN_USERNAME", "ADMIN_PASSWORD", "DATABASE_URL"] }
+}
